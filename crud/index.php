@@ -22,6 +22,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 
+<!-- DataTable Export -->
+
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
 
 </head>
 <body>
@@ -112,6 +119,12 @@ function load()
 $(document).ready(function() {
     $('#consulta').DataTable( {
         "destroy":true,
+        "bAutoWidth":false,
+        "language":{
+        
+         "url":"https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+
+        },
         "ajax": "sources.php?op=1",
         "columns": [
             { "data": "id" },
@@ -175,6 +188,12 @@ swal({
   showConfirmButton:false
 
 });
+
+//Cerrar ventana
+$('#registro')[0].reset();
+$('#modal-registro').modal('hide');
+
+
 
 
 }

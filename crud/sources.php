@@ -20,7 +20,14 @@ $opcion =  $_REQUEST['op'];
 switch ($opcion) {
 	case 1:
 	
- $query     = "SELECT * FROM usuario";
+ $query     = "SELECT 
+  
+ id,
+ nombres,
+ apellidos,
+ DATE_FORMAT(fecha_nacimiento,'%d/%m/%Y') fecha_nacimiento
+
+  FROM usuario";
  $statement = $conexion->prepare($query);
  $statement->execute();
  $result = $statement->fetchAll(PDO::FETCH_ASSOC);
