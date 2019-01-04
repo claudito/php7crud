@@ -18,6 +18,11 @@
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 
+<!-- Sweet Alert -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+
+
 </head>
 <body>
 
@@ -106,6 +111,7 @@ function load()
 
 $(document).ready(function() {
     $('#consulta').DataTable( {
+        "destroy":true,
         "ajax": "sources.php?op=1",
         "columns": [
             { "data": "id" },
@@ -136,7 +142,48 @@ $('#registro').on('submit',function (event){
 
 parametros = $(this).serialize();
 
-alert(parametros);
+//envío de datos por ajax
+$.ajax({
+
+url:"sources.php?op=2",
+type:"POST",
+data:parametros,
+beforeSend:function(){
+
+swal({
+ 
+  title:"Cargando",
+  text: "Espere un momento no cierre la ventana",
+  imageUrl: 'img/loader2.gif',
+  showConfirmButton:false
+
+});
+
+
+},
+success:function(data){
+
+//Cargar Data
+ load();
+
+swal({
+ 
+  title:"Buen Trabajo",
+  text: "Registro Agregado",
+  type: 'success',
+  timer: 3000,
+  showConfirmButton:false
+
+});
+
+
+}
+
+
+
+
+
+});
 
 
 
