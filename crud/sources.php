@@ -34,7 +34,29 @@ switch ($opcion) {
 		break;
 	case 2:
 	
-	var_dump($_REQUEST);
+	$nombres          = trim($_REQUEST['nombres']);
+	$apellidos        = trim($_REQUEST['apellidos']);
+	$fecha_nacimiento = $_REQUEST['fecha_nacimiento'];
+
+	try {
+		
+    $query =  "INSERT INTO usuario
+    (nombres,apellidos,fecha_nacimiento)
+    VALUES(:nombres,:apellidos,:fecha_nacimiento)";
+    $statement = $conexion->prepare($query);
+    $statement->bindParam(':nombres',$nombres);
+    $statement->bindParam(':apellidos',$apellidos);
+    $statement->bindParam(':fecha_nacimiento',$fecha_nacimiento);
+    $statement->execute();
+    echo "ok";
+
+
+
+	} catch (Exception $e) {
+		
+    echo "Error: ".$e->getMessage();
+
+	}
 
 
 
