@@ -27,9 +27,11 @@
 
 <!-- Botón que activa el modal -->
 <div class="form-group">
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+
+<button type="button" class="btn btn-primary btn-agregar">
  <i class="fa fa-plus"></i> Agregar
 </button>
+
 </div>
 
 
@@ -61,8 +63,8 @@
 
 
 <!-- Modal  Agregar-->
-<form id="agregar">
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<form id="registro">
+<div class="modal fade" id="modal-registro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -122,42 +124,27 @@ $(document).ready(function() {
 load();
 
 
+//Cargar Modal
+$('.btn-agregar').on('click',function (){
 
+$('#modal-registro').modal('show');
 
+});
 
-//Agregar
-//utilizamos la función submit para captura el envento de envio de datos
-$('#agregar').submit(function (event){
+//Agregar Datos
+$('#registro').on('submit',function (event){
 
-//Guardamo todos los valores de los name en la variable parametros
 parametros = $(this).serialize();
 
-//usamos la función ajax para el envio de datos
-$.ajax({
-
-url:"sources.php?op=2",//le especificamos la ruta a donde se enviaran los archivos
-type:"POST",//GET o POST (tipo de envio)
-data:parametros,// los parametros a enviar
-//estados de envio
-beforeSend:function(){//mientras se esta enviando
-
-$('#mensaje').html('Cargando...');//div mensaje
-
-},//cuando ya se enviaron y ademas se recupera el mensaje del servidor
-success:function(data){
-
-$('#mensaje').html(data);//div mensaje
-
-}
+alert(parametros);
 
 
+
+//Función que evita que el browser se recargue
+event.preventDefault();
 });
 
 
-
-event.preventDefault();	//evitamos que el navegador se recarge.
-//Por default luego de presionar un boton submit el navegador se recarga de manera automatica
-});
 
 
 </script>
