@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<title>CRUD</title>
+  <meta charset="UTF-8">
+  <title>CRUD</title>
 
 <!-- Bootstrap 4.1 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css" >
@@ -48,21 +48,22 @@
 
 
 <!-- Tabla -->
-<table id="consulta" class="table">
+<table id="consulta" class="table table-hover">
 <thead>
 <tr>
 <th>Id</th>
 <th>Nombres</th>
 <th>Apellidos</th>
 <th>Fecha de Nacimiento</th>
+<th>Acciones</th>
 </tr>
 </thead>
 
 </table>
-	
+  
 
 
-	
+  
 
 
 
@@ -80,32 +81,40 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
+        <h5 class="modal-title" id="exampleModalLabel">zzz</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+
+
+  <input type="hidden" name="id" class="id">
+
+  <input type="hidden" name="tipo" class="tipo">
        
 <div class="form-group">
 <label>Nombres:</label>
-<input type="text" name="nombres" required class="form-control"> 
+<input type="text" name="nombres" required 
+class="nombres form-control"> 
 </div> 
 
 <div class="form-group">
 <label>Apellidos:</label>
-<input type="text" name="apellidos" required class="form-control"> 
+<input type="text" name="apellidos" required 
+class="apellidos form-control"> 
 </div> 
 
 <div class="form-group">
 <label>Fecha de Nacimiento:</label>
-<input type="date" name="fecha_nacimiento" required class="form-control"> 
+<input type="date" name="fecha_nacimiento" required
+ class="fecha_nacimiento form-control"> 
 </div> 
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <input type="submit" value="submit" class="btn btn-primary btn-submit">
       </div>
     </div>
   </div>
@@ -130,7 +139,9 @@ $(document).ready(function() {
             { "data": "id" },
             { "data": "nombres" },
             { "data": "apellidos" },
-            { "data": "fecha_nacimiento" }
+            { "data": "fecha_nacimiento" },
+            { "data": "acciones"}
+
         ]
     } );
 } );
@@ -145,15 +156,56 @@ load();
 
 //Cargar Modal
 $('.btn-agregar').on('click',function (){
-
+$('#registro')[0].reset();
+$('.modal-title').html('Agregar Usuario');
+$('.btn-submit').attr('value','Agregar');
+$('.tipo').val('agregar');
 $('#modal-registro').modal('show');
 
 });
 
-//Agregar Datos
+
+//Cargar Modal Actualizar
+$(document).on('click','.btn-edit',function(){
+ 
+ $('.modal-title').html('Actualizar Usuario');
+ $('.btn-submit').attr('value','Actualizar');
+ $('.tipo').val('actualizar');
+ id = $(this).data('id');
+
+ url = "sources.php?op=5";
+
+ $.getJSON(url,{'id':id},function (data){
+
+  //Cargar Valores a los Input´s 
+   
+   $('.id').val(id);
+   $('.nombres').val(data.nombres);
+   $('.apellidos').val(data.apellidos);
+   $('.fecha_nacimiento').val(data.fecha_nacimiento);
+
+   $('#modal-registro').modal('show');
+
+ });
+
+});
+
+
+//Agregar o Actualizar
 $('#registro').on('submit',function (event){
 
 parametros = $(this).serialize();
+
+tipo       = $('.tipo').val();
+
+if(tipo=='agregar')
+{
+  mensaje = "Registro Agregado";
+}
+else
+{
+  mensaje = "Registro Actualizado";
+}
 
 //envío de datos por ajax
 $.ajax({
@@ -182,33 +234,27 @@ success:function(data){
 swal({
  
   title:"Buen Trabajo",
-  text: "Registro Agregado",
+  text: mensaje,
   type: 'success',
   timer: 3000,
   showConfirmButton:false
 
 });
 
-//Cerrar ventana
+//Limpia los valores del formulario
 $('#registro')[0].reset();
+//Cerrar Ventana Modal
 $('#modal-registro').modal('hide');
-
-
 
 
 }
 
-
-
-
-
 });
-
-
 
 //Función que evita que el browser se recargue
 event.preventDefault();
 });
+
 
 
 
@@ -218,6 +264,6 @@ event.preventDefault();
 
 
 
-	
+  
 </body>
 </html>

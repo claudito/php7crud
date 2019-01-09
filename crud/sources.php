@@ -6,10 +6,10 @@ $conexion = new Conexion();
 $conexion = $conexion->get_conexion();
 
 /*
-Consultar = opcion 1
-agregar   = opcion 2
-actualizar= opcion 3
+lista de usuarios  = opcion 1
+agregar / Actualizar   = opcion 2
 eliminar  = opcion 4
+consulta por usuario = opcion 5
 
 $_GET  = no  encriptado.
 $_POST = encriptado
@@ -19,7 +19,8 @@ $opcion =  $_REQUEST['op'];
 
 switch ($opcion) {
 	case 1:
-	
+
+ //Creación de Consulta
  $query     = "SELECT 
   
  id,
@@ -32,18 +33,47 @@ switch ($opcion) {
  $statement->execute();
  $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
- $data = ["data"=>$result];
+ //Creación de JSON
+ $data = array();
 
- echo json_encode($data);
+ foreach ($result as $key => $value) {
+ 	 
+
+ $data[] = [
+
+ 'id'=>$value['id'],
+ 'nombres'=>$value['nombres'],
+ 'apellidos'=>$value['apellidos'],
+ 'fecha_nacimiento'=>$value['fecha_nacimiento'],
+ 'acciones'=>' 
+ 
+  <button class="btn btn-info btn-sm btn-edit" 
+  data-id="'.$value['id'].'" >
+  <i class="fa fa-edit"></i>
+  </button>
+
+  '
+
+ ];
 
 
+ }
+
+ $json = ['data'=>$data];
+
+ echo json_encode($json);
 
 		break;
 	case 2:
-	
+    
 	$nombres          = trim($_REQUEST['nombres']);
 	$apellidos        = trim($_REQUEST['apellidos']);
 	$fecha_nacimiento = $_REQUEST['fecha_nacimiento'];
+
+    if($_REQUEST['tipo']=='agregar')
+    {
+    
+    //Agregar
 
 	try {
 		
@@ -67,6 +97,44 @@ switch ($opcion) {
 
 
 
+    }
+    else
+    {
+
+    //Actualizar
+    
+    $id = $_REQUEST['id'];
+
+	try {
+		
+    $query =  "UPDATE  usuario SET 
+    nombres=:nombres,
+    apellidos=:apellidos,
+    fecha_nacimiento=:fecha_nacimiento 
+    WHERE id=:id";
+    $statement = $conexion->prepare($query);
+    $statement->bindParam(':nombres',$nombres);
+    $statement->bindParam(':apellidos',$apellidos);
+    $statement->bindParam(':fecha_nacimiento',$fecha_nacimiento);
+    $statement->bindParam(':id',$id);
+    $statement->execute();
+    echo "ok";
+
+
+
+	} catch (Exception $e) {
+		
+    echo "Error: ".$e->getMessage();
+
+	}
+
+
+
+
+    }
+
+
+	
 
 		break;
     case 3:
@@ -75,6 +143,31 @@ switch ($opcion) {
 	case 4:
 	echo "eliminar";
 		break;
+
+	case 5:
+     
+     $id = $_REQUEST['id'];
+
+     try {
+    
+     $query =  "SELECT * FROM usuario WHERE id=:id";
+     $statement = $conexion->prepare($query);
+     $statement->bindParam(':id',$id);
+     $statement->execute();
+     $result    = $statement->fetch(PDO::FETCH_ASSOC);
+
+     echo json_encode($result);
+ 
+
+     	
+     } catch (Exception $e) {
+     	
+     echo "Error: ".$e->getMessage();
+
+     }
+
+
+	break;
     
 	default:
 	echo "no existe la opción";
