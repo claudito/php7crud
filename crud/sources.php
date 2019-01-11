@@ -8,7 +8,8 @@ $conexion = $conexion->get_conexion();
 /*
 lista de usuarios  = opcion 1
 agregar / Actualizar   = opcion 2
-eliminar  = opcion 4
+cambiar estado = opcion 3
+lista de áreas  = opcion 4
 consulta por usuario = opcion 5
 
 $_GET  = no  encriptado.
@@ -23,12 +24,20 @@ switch ($opcion) {
  //Creación de Consulta
  $query     = "SELECT 
   
- id,
- nombres,
- apellidos,
- DATE_FORMAT(fecha_nacimiento,'%d/%m/%Y') fecha_nacimiento
+ u.id,
+ u.nombres,
+ u.apellidos,
+ DATE_FORMAT(u.fecha_nacimiento,'%d/%m/%Y') fecha_nacimiento,
+ u.estado,
+ case u.estado 
+ WHEN 'ACTIVO' THEN 'success'
+ WHEN 'CESADO' THEN 'danger'
+ END label,
+ a.nombre area
 
-  FROM usuario";
+FROM usuario u 
+INNER JOIN area a ON u.id_area=a.id
+";
  $statement = $conexion->prepare($query);
  $statement->execute();
  $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -45,12 +54,18 @@ switch ($opcion) {
  'nombres'=>$value['nombres'],
  'apellidos'=>$value['apellidos'],
  'fecha_nacimiento'=>$value['fecha_nacimiento'],
+ 'area'=>$value['area'],
  'acciones'=>' 
  
   <button class="btn btn-info btn-sm btn-edit" 
   data-id="'.$value['id'].'" >
   <i class="fa fa-edit"></i>
   </button>
+  <button class="btn btn-sm btn-estado btn-'.$value['label'].' " 
+  data-id="'.$value['id'].'"
+  data-estado="'.$value['estado'].'"
+
+    >   '.$value['estado'].'</button>
 
   '
 
@@ -138,10 +153,52 @@ switch ($opcion) {
 
 		break;
     case 3:
-	echo "actualizar";
+	
+    $id     = $_REQUEST['id'];
+    $estado = $_REQUEST['estado'];
+    $estado = ($estado=='ACTIVO') ? 'CESADO' : 'ACTIVO';
+
+    try {
+        
+    $query = "UPDATE usuario SET estado=:estado WHERE id=:id";
+    $statement = $conexion->prepare($query);
+    $statement->bindParam(':estado',$estado);
+    $statement->bindParam(':id',$id);
+    $statement->execute();
+    echo "ok";
+
+
+    } catch (Exception $e) {
+        
+     echo "Error: ".$e->getMessage();
+
+    }
+
+
+
 		break;
 	case 4:
-	echo "eliminar";
+	
+    try {
+        
+     $query =  "SELECT * FROM area";
+     $statement = $conexion->prepare($query);
+     $statement->execute();
+
+     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+     echo json_encode($result);
+
+
+
+    } catch (Exception $e) {
+        
+     echo "Error: ".$e->getMessage();
+
+    }
+
+
+
 		break;
 
 	case 5:
@@ -150,7 +207,18 @@ switch ($opcion) {
 
      try {
     
-     $query =  "SELECT * FROM usuario WHERE id=:id";
+     $query =  "SELECT 
+     
+      u.id,
+      u.nombres,
+      u.apellidos,
+      u.fecha_nacimiento,
+      u.estado,
+      u.id_area,
+      a.nombre area
+      FROM usuario u  
+      INNER JOIN area a ON u.id_area=a.id
+      WHERE u.id=:id";
      $statement = $conexion->prepare($query);
      $statement->bindParam(':id',$id);
      $statement->execute();

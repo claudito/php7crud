@@ -55,6 +55,7 @@
 <th>Nombres</th>
 <th>Apellidos</th>
 <th>Fecha de Nacimiento</th>
+<th>Área</th>
 <th>Acciones</th>
 </tr>
 </thead>
@@ -111,6 +112,11 @@ class="apellidos form-control">
  class="fecha_nacimiento form-control"> 
 </div> 
 
+<div class="form-group">
+<label>Área</label>
+<select name="area" class="area form-control" required></select>
+</div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -140,6 +146,7 @@ $(document).ready(function() {
             { "data": "nombres" },
             { "data": "apellidos" },
             { "data": "fecha_nacimiento" },
+            { "data": "area"},
             { "data": "acciones"}
 
         ]
@@ -154,12 +161,30 @@ $(document).ready(function() {
 load();
 
 
-//Cargar Modal
+//Cargar Modal Agregar
 $('.btn-agregar').on('click',function (){
 $('#registro')[0].reset();
 $('.modal-title').html('Agregar Usuario');
 $('.btn-submit').attr('value','Agregar');
 $('.tipo').val('agregar');
+
+//Cargar Áreas
+url  = "sources.php?op=4";
+area = '<option value="">Seleccionar</option>';
+$.getJSON(url,{},function(array){
+
+//Recorre el Array de datos
+array.forEach(function (data){
+
+area += '<option value="'+data.id+'">'+data.nombre+'</option>';
+
+$('.area').html(area);
+
+});
+
+
+});
+
 $('#modal-registro').modal('show');
 
 });
@@ -178,11 +203,35 @@ $(document).on('click','.btn-edit',function(){
  $.getJSON(url,{'id':id},function (data){
 
   //Cargar Valores a los Input´s 
-   
    $('.id').val(id);
    $('.nombres').val(data.nombres);
    $('.apellidos').val(data.apellidos);
    $('.fecha_nacimiento').val(data.fecha_nacimiento);
+
+   
+   //Cargar  Áreas
+    url  = "sources.php?op=4";
+    area = '<option value="'+data.id_area+'">'+data.area+'</option>';
+    $.getJSON(url,{},function(array){
+
+    array.forEach(function (data_area){
+
+    if(data_area.id!==data.id_area)
+    {
+
+    area += '<option value="'+data_area.id+'">'+data_area.nombre+'</option>';
+
+    }
+
+    $('.area').html(area);
+
+
+    });
+
+
+
+    });
+
 
    $('#modal-registro').modal('show');
 
@@ -255,7 +304,26 @@ $('#modal-registro').modal('hide');
 event.preventDefault();
 });
 
+//Actualizar Estado
+$(document).on('click','.btn-estado',function (){
 
+ id     = $(this).data('id');
+ estado = $(this).data('estado');
+
+ url        = "sources.php?op=3";
+ parametros = {'id':id,'estado':estado};
+
+ $.post(url,parametros,function (data){
+
+   //Cargar Data o Grilla de datos
+   load();
+  
+
+ });
+
+
+
+});
 
 
 
