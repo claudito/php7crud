@@ -1,0 +1,13 @@
+Paso para el configurar PHPMailer (Libreria para el envío de email):
+
+1. Crear un cuenta de Gmail *
+2. Instalar Composer*
+3. Instalar PHPMailer
+4. Instalar GIT
+5. Crear nuestra aplicación
+
+correo:
+notificacionsistemasperutec@gmail.com
+
+pass:
+aguaazul
