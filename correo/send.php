@@ -9,6 +9,13 @@ include'../vendor/autoload.php';
  * The IMAP section shows how to save this message to the 'Sent Mail' folder using IMAP commands.
  */
 
+//Variables
+$nombres    =  trim($_REQUEST['nombres']);
+$correo     =  trim($_REQUEST['correo']);
+$asunto     =  trim($_REQUEST['asunto']);
+$comentario =  trim($_REQUEST['comentario']);
+
+
 //Import PHPMailer classes into the global namespace
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -54,15 +61,15 @@ $mail->setFrom('notificacionsistemasperutec@gmail.com', 'Luis Claudio');
 
 //Set who the message is to be sent to
 //Destinatario
-$mail->addAddress('luis.claudio@perutec.com.pe', 'Luis Claudio');
+$mail->addAddress($correo, $nombres);
 
 //Set the subject line
-$mail->Subject = 'Correo de Prueba';
+$mail->Subject = $asunto;
 
 //Read an HTML message body from an external file, convert referenced images to embedded,
 //convert HTML into a basic plain-text alternative body
 //Cuerpo del Correo
-$html = "Hola este es un correo de Prueba";
+$html = $comentario;
 //$mail->msgHTML(file_get_contents('contents.html'), __DIR__);
 $mail->msgHTML($html);
 //Replace the plain text body with one created manually
@@ -70,7 +77,7 @@ $mail->msgHTML($html);
 
 //Attach an image file
 $mail->addAttachment('img/php.jpg');
-$mail->addAttachment('img/php2.jpg');
+//$mail->addAttachment('img/php2.jpg');
 
 //send the message, check for errors
 if (!$mail->send()) {
