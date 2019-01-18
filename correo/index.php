@@ -17,7 +17,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 
 <!-- include summernote css/js -->
- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-lite.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-lite.js"></script>
 
@@ -109,7 +108,8 @@ success:function(){
 
 //Limpiar Inputs
 $('#envio')[0].reset();
-
+//Limpiar Caja de texto SummerNote
+$('#comentario').summernote('code', '');
 
 swal({
  

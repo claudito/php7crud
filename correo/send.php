@@ -76,7 +76,7 @@ $mail->msgHTML($html);
 //$mail->AltBody = 'This is a plain-text message body';
 
 //Attach an image file
-$mail->addAttachment('img/php.jpg');
+//$mail->addAttachment('img/php.jpg');
 //$mail->addAttachment('img/php2.jpg');
 
 //send the message, check for errors
